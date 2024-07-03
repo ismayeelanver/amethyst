@@ -7,6 +7,7 @@ good code always starts from scratch
 here is some of Amethyst code
 
 ```amethyst
+![img][]
 print("Hello world")
 ```
 
