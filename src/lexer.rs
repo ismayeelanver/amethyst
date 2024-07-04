@@ -7,7 +7,6 @@ pub enum TokenType {
     RParen,
     Exit,
     IntegerLiteral,
-    Semi,
     Identifier,
     Plus,
     Minus,
@@ -127,21 +126,14 @@ pub fn tokenize(content: String) -> Vec<Token> {
                         value: id_str,
                     },
                 }
-            }
-            ';' => {
-                i += 1;
-                Token {
-                    _type: TokenType::Semi,
-                    value: current_char.to_string(),
-                }
-            }
+            },
             '+' => {
                 i += 1;
                 Token {
                     _type: TokenType::Plus,
                     value: current_char.to_string(),
                 }
-            }
+            },
             '-' => {
                 i += 1;
                 Token {
