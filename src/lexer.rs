@@ -25,7 +25,7 @@ pub enum TokenType {
     In,
     Function,
     Variable,
-    Print
+    Print,
 }
 
 #[derive(Debug)]
@@ -47,6 +47,24 @@ pub fn tokenize(content: String) -> Vec<Token> {
             continue;
         }
 
+        // Skip single-line comments
+        if current_char == '/' && i + 1 < vechar.len() && vechar[i + 1] == '/' {
+            while i < vechar.len() && vechar[i] != '\n' {
+                i += 1;
+            }
+            continue;
+        }
+
+        // Skip multi-line comments
+        if current_char == '/' && i + 1 < vechar.len() && vechar[i + 1] == '*' {
+            i += 2;
+            while i + 1 < vechar.len() && !(vechar[i] == '*' && vechar[i + 1] == '/') {
+                i += 1;
+            }
+            i += 2;
+            continue;
+        }
+
         let token = match current_char {
             '0'..='9' => {
                 let mut num_str = String::new();
@@ -63,14 +81,14 @@ pub fn tokenize(content: String) -> Vec<Token> {
                 i += 1;
                 Token {
                     _type: TokenType::LParen,
-                    value: String::from("("),
+                    value: current_char.to_string(),
                 }
             }
             ')' => {
                 i += 1;
                 Token {
                     _type: TokenType::RParen,
-                    value: String::from(")"),
+                    value: current_char.to_string(),
                 }
             }
             c if c.is_alphanumeric() => {
@@ -90,19 +108,19 @@ pub fn tokenize(content: String) -> Vec<Token> {
                     },
                     "in" => Token {
                         _type: TokenType::In,
-                        value: id_str
+                        value: id_str,
                     },
                     "func" => Token {
                         _type: TokenType::Function,
-                        value: id_str
+                        value: id_str,
                     },
                     "var" => Token {
                         _type: TokenType::Variable,
-                        value: id_str
+                        value: id_str,
                     },
                     "print" => Token {
                         _type: TokenType::Print,
-                        value: id_str
+                        value: id_str,
                     },
                     _ => Token {
                         _type: TokenType::Identifier,
@@ -125,64 +143,94 @@ pub fn tokenize(content: String) -> Vec<Token> {
                 }
             }
             '-' => {
-                i+=1;
+                i += 1;
                 Token {
                     _type: TokenType::Minus,
-                    value: current_char.to_string()
+                    value: current_char.to_string(),
                 }
             }
             '*' => {
-                i+=1;
+                i += 1;
                 Token {
                     _type: TokenType::Mul,
-                    value: current_char.to_string()
+                    value: current_char.to_string(),
                 }
             }
             '/' => {
-                i+=1;
-                Token { _type: TokenType::Div, value: current_char.to_string() }
-            },
+                i += 1;
+                Token {
+                    _type: TokenType::Div,
+                    value: current_char.to_string(),
+                }
+            }
             ':' => {
-                i+=1;
-                Token { _type: TokenType::Repr, value: current_char.to_string() }
-            },
+                i += 1;
+                Token {
+                    _type: TokenType::Repr,
+                    value: current_char.to_string(),
+                }
+            }
             '%' => {
-                i+=1;
-                Token { _type: TokenType::Mod, value: current_char.to_string() }
-            },
+                i += 1;
+                Token {
+                    _type: TokenType::Mod,
+                    value: current_char.to_string(),
+                }
+            }
             ',' => {
-                i+=1;
-                Token { _type: TokenType::Comma, value: current_char.to_string() }
+                i += 1;
+                Token {
+                    _type: TokenType::Comma,
+                    value: current_char.to_string(),
+                }
             }
             '>' => {
-                i+=1;
-                Token { _type: TokenType::Greaterthan, value: current_char.to_string()}
+                i += 1;
+                Token {
+                    _type: TokenType::Greaterthan,
+                    value: current_char.to_string(),
+                }
             }
             '<' => {
-                i+=1;
-                Token { _type: TokenType::Lesserthan, value: current_char.to_string() }
+                i += 1;
+                Token {
+                    _type: TokenType::Lesserthan,
+                    value: current_char.to_string(),
+                }
             }
             '{' => {
-                i+=1;
-                Token { _type: TokenType::Leftblock, value: current_char.to_string() }
+                i += 1;
+                Token {
+                    _type: TokenType::Leftblock,
+                    value: current_char.to_string(),
+                }
             }
             '}' => {
-                i+=1;
-                Token { _type: TokenType::Rightblock, value: current_char.to_string() }
+                i += 1;
+                Token {
+                    _type: TokenType::Rightblock,
+                    value: current_char.to_string(),
+                }
             }
             '=' => {
-                i+=1;
-                Token { _type: TokenType::Equals, value: current_char.to_string() }
+                i += 1;
+                Token {
+                    _type: TokenType::Equals,
+                    value: current_char.to_string(),
+                }
             }
             '"' => {
-                i+=1;
+                i += 1;
                 let start = i;
                 while i < vechar.len() && vechar[i] != '"' {
-                    i+=1;
+                    i += 1;
                 }
                 let chars = vechar[start..i].iter().collect::<String>();
-                i+=1;
-                Token { _type: TokenType::Stringliteral, value: chars }
+                i += 1;
+                Token {
+                    _type: TokenType::Stringliteral,
+                    value: chars,
+                }
             }
             _ => {
                 eprintln!("Unexpected token {}", current_char);
