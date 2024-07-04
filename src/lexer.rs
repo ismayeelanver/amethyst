@@ -1,7 +1,7 @@
 use std::process::exit;
 
 #[derive(Debug, PartialEq)]
-enum TokenType {
+pub enum TokenType {
     Return,
     LParen,
     RParen,
@@ -9,12 +9,29 @@ enum TokenType {
     IntegerLiteral,
     Semi,
     Identifier,
+    Plus,
+    Minus,
+    Div,
+    Mul,
+    Mod,
+    Repr,
+    Comma,
+    Greaterthan,
+    Lesserthan,
+    Leftblock,
+    Rightblock,
+    Equals,
+    Stringliteral,
+    In,
+    Function,
+    Variable,
+    Print
 }
 
 #[derive(Debug)]
 pub struct Token {
-    _type: TokenType,
-    value: String,
+    pub _type: TokenType,
+    pub value: String,
 }
 
 pub fn tokenize(content: String) -> Vec<Token> {
@@ -37,13 +54,24 @@ pub fn tokenize(content: String) -> Vec<Token> {
                     num_str.push(vechar[i]);
                     i += 1;
                 }
-                Token { _type: TokenType::IntegerLiteral, value: num_str }
-            },
+                Token {
+                    _type: TokenType::IntegerLiteral,
+                    value: num_str,
+                }
+            }
             '(' => {
-                Token { _type: TokenType::RParen, value: String::from("(") }
-            },
+                i += 1;
+                Token {
+                    _type: TokenType::LParen,
+                    value: String::from("("),
+                }
+            }
             ')' => {
-                Token { _type: TokenType::LParen, value: String::from(")") }
+                i += 1;
+                Token {
+                    _type: TokenType::RParen,
+                    value: String::from(")"),
+                }
             }
             c if c.is_alphanumeric() => {
                 let mut id_str = String::new();
@@ -52,15 +80,110 @@ pub fn tokenize(content: String) -> Vec<Token> {
                     i += 1;
                 }
                 match id_str.as_str() {
-                    "return" => Token { _type: TokenType::Return, value: id_str },
-                    "exit" => Token { _type: TokenType::Exit, value: id_str },
-                    _ => Token { _type: TokenType::Identifier, value: id_str }
+                    "return" => Token {
+                        _type: TokenType::Return,
+                        value: id_str,
+                    },
+                    "exit" => Token {
+                        _type: TokenType::Exit,
+                        value: id_str,
+                    },
+                    "in" => Token {
+                        _type: TokenType::In,
+                        value: id_str
+                    },
+                    "func" => Token {
+                        _type: TokenType::Function,
+                        value: id_str
+                    },
+                    "var" => Token {
+                        _type: TokenType::Variable,
+                        value: id_str
+                    },
+                    "print" => Token {
+                        _type: TokenType::Print,
+                        value: id_str
+                    },
+                    _ => Token {
+                        _type: TokenType::Identifier,
+                        value: id_str,
+                    },
                 }
-            },
+            }
             ';' => {
                 i += 1;
-                Token { _type: TokenType::Semi, value: current_char.to_string() }
+                Token {
+                    _type: TokenType::Semi,
+                    value: current_char.to_string(),
+                }
+            }
+            '+' => {
+                i += 1;
+                Token {
+                    _type: TokenType::Plus,
+                    value: current_char.to_string(),
+                }
+            }
+            '-' => {
+                i+=1;
+                Token {
+                    _type: TokenType::Minus,
+                    value: current_char.to_string()
+                }
+            }
+            '*' => {
+                i+=1;
+                Token {
+                    _type: TokenType::Mul,
+                    value: current_char.to_string()
+                }
+            }
+            '/' => {
+                i+=1;
+                Token { _type: TokenType::Div, value: current_char.to_string() }
             },
+            ':' => {
+                i+=1;
+                Token { _type: TokenType::Repr, value: current_char.to_string() }
+            },
+            '%' => {
+                i+=1;
+                Token { _type: TokenType::Mod, value: current_char.to_string() }
+            },
+            ',' => {
+                i+=1;
+                Token { _type: TokenType::Comma, value: current_char.to_string() }
+            }
+            '>' => {
+                i+=1;
+                Token { _type: TokenType::Greaterthan, value: current_char.to_string()}
+            }
+            '<' => {
+                i+=1;
+                Token { _type: TokenType::Lesserthan, value: current_char.to_string() }
+            }
+            '{' => {
+                i+=1;
+                Token { _type: TokenType::Leftblock, value: current_char.to_string() }
+            }
+            '}' => {
+                i+=1;
+                Token { _type: TokenType::Rightblock, value: current_char.to_string() }
+            }
+            '=' => {
+                i+=1;
+                Token { _type: TokenType::Equals, value: current_char.to_string() }
+            }
+            '"' => {
+                i+=1;
+                let start = i;
+                while i < vechar.len() && vechar[i] != '"' {
+                    i+=1;
+                }
+                let chars = vechar[start..i].iter().collect::<String>();
+                i+=1;
+                Token { _type: TokenType::Stringliteral, value: chars }
+            }
             _ => {
                 eprintln!("Unexpected token {}", current_char);
                 exit(54);
