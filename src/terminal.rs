@@ -1,12 +1,17 @@
-use crate::lexer::{self, tokenize};
-use std::{borrow::Borrow, io::{self, Write}};
+use crate::parser::Parser;
+use std::io::{self, Write};
 pub fn run() {
     let mut buf = String::new();
     loop {
         print!(">>> ");
-        io::stdout().flush();
+        buf = String::new();
+        let _ = io::stdout().flush();
         io::stdin().read_line(&mut buf).unwrap();
-        let tokens = lexer::tokenize(buf.to_string());
-        println!("{:?}", tokens)
+        if buf.as_str() == "exit" {
+            break;
+        } else {
+            let ast = Parser::parse(buf);
+            println!("{:?}", ast);
+        }
     }
 }

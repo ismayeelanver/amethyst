@@ -1,6 +1,6 @@
 use std::process::exit;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum TokenType {
     Return,
     LParen,
@@ -25,9 +25,15 @@ pub enum TokenType {
     Function,
     Variable,
     Print,
+    EOF,
+    New
 }
-
-#[derive(Debug)]
+impl TokenType {
+    pub fn new() -> TokenType{
+        return TokenType::New;
+    }
+}
+#[derive(Debug, Clone)]
 pub struct Token {
     pub _type: TokenType,
     pub value: String,
@@ -229,9 +235,9 @@ pub fn tokenize(content: String) -> Vec<Token> {
                 exit(54);
             }
         };
-
         tokens.push(token);
     }
+    tokens.push(Token { _type: TokenType::EOF, value: "EOF".to_string() });
 
     tokens
 }

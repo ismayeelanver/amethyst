@@ -19,7 +19,7 @@ struct Token {
     value: String
 }
 ```
-===
+
 so the lexer is made like this:
 ```
 fn tokenize(contents: String) -> Vec<Token> {
@@ -262,5 +262,51 @@ there's a lot right!, dont worry were here.
 
 - 1.1 Parser
 
+The parser is the part of the language that takes the tokens and makes an expression for each token
 
-TODO: IN PROGRESS
+for example an arithmetic expression:
+```1 + 1```
+
+Should produce the following tokens into a Vector:
+```[Token { _type: IntegerLiteral, _value: 1 }, Token { _type: Plus, _value: "+" }, Token { _type: IntegerLiteral, _value: 1 }]```
+
+These tokens can be further parsed into meaningful expressions
+Such as the following:
+```
+Program {
+    body: [
+        BinaryExpression {
+            left: 1,
+            operator: Operators::Plus,
+            right: 1,
+        }
+    ]
+}
+```
+here is an example snippet that can be used:
+```parser.rs
+
+struct Parser {};
+
+impl Parser {
+    // Parser's functions are displayed here.
+}
+```
+```ast.rs
+enum Operators {
+    Addition,
+    Subtraction,
+    Multiplication,
+    Division,
+    Modulus,
+    /* Other Operators */
+}
+enum Expr {
+    BinaryExpression { left: f64, op: Operators, right: f64 }
+    IdentifierLiteral { value: String }
+    IntegerLiteral { value: f64 }
+}
+struct Program {
+    body: Vec<Expr>;
+};
+```
