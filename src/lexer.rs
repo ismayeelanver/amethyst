@@ -26,13 +26,10 @@ pub enum TokenType {
     Variable,
     Print,
     EOF,
-    New
+    Dot,
+    Float,
 }
-impl TokenType {
-    pub fn new() -> TokenType{
-        return TokenType::New;
-    }
-}
+
 #[derive(Debug, Clone)]
 pub struct Token {
     pub _type: TokenType,
@@ -73,13 +70,35 @@ pub fn tokenize(content: String) -> Vec<Token> {
         let token = match current_char {
             '0'..='9' => {
                 let mut num_str = String::new();
-                while i < vechar.len() && vechar[i].is_digit(10) {
+                let mut is_float = false;
+                while i < vechar.len() && (vechar[i].is_digit(10) || vechar[i] == '.') {
+                    if vechar[i] == '.' {
+                        if is_float {
+                            eprintln!("Unexpected token {}", current_char);
+                            exit(54);
+                        }
+                        is_float = true;
+                    }
                     num_str.push(vechar[i]);
                     i += 1;
                 }
+                if is_float {
+                    Token {
+                        _type: TokenType::Float,
+                        value: num_str,
+                    }
+                } else {
+                    Token {
+                        _type: TokenType::IntegerLiteral,
+                        value: num_str,
+                    }
+                }
+            }
+            '.' => {
+                i += 1;
                 Token {
-                    _type: TokenType::IntegerLiteral,
-                    value: num_str,
+                    _type: TokenType::Dot,
+                    value: String::from("."),
                 }
             }
             '(' => {
