@@ -1,3 +1,4 @@
+// so we can call the function inside the function
 in fun fib(num: any(int, float)) -> any(int, float) {
     pub int a = 0, b = 1, c = undefined
     if (num > 0) {
