@@ -30,7 +30,7 @@ pub enum TokenType {
     Float,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub _type: TokenType,
     pub value: String,
@@ -151,14 +151,14 @@ pub fn tokenize(content: String) -> Vec<Token> {
                         value: id_str,
                     },
                 }
-            },
+            }
             '+' => {
                 i += 1;
                 Token {
                     _type: TokenType::Plus,
                     value: current_char.to_string(),
                 }
-            },
+            }
             '-' => {
                 i += 1;
                 Token {
@@ -256,7 +256,10 @@ pub fn tokenize(content: String) -> Vec<Token> {
         };
         tokens.push(token);
     }
-    tokens.push(Token { _type: TokenType::EOF, value: "EOF".to_string() });
+    tokens.push(Token {
+        _type: TokenType::EOF,
+        value: "EOF".to_string(),
+    });
 
     tokens
 }

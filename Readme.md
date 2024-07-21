@@ -9,7 +9,7 @@ Amethyst
 - 1.0 The Lexer
 
 The Lexer is the part where it collects the input and makes them into tokens for example `1 + 2`, So here its gonna go throught the code ive given in this case `1 + 2` and for each character its gonna make a token for example the tokens might look like a struct:
-```
+```rust
 enum TokenType {
     IntegerLiteral
     Plus
@@ -21,7 +21,7 @@ struct Token {
 ```
 
 so the lexer is made like this:
-```
+```rust
 fn tokenize(contents: String) -> Vec<Token> {
     i = 0
     let tokens: Vec<Token> = vec![];
@@ -53,7 +53,7 @@ now if we try it should give an output like this:
 
 
 this is the code used in the lexer:
-```
+```rust
 use std::process::exit;
 
 #[derive(Debug, PartialEq)]
@@ -262,51 +262,6 @@ there's a lot right!, dont worry were here.
 
 - 1.1 Parser
 
-The parser is the part of the language that takes the tokens and makes an expression for each token
+-Inspiration 💫
 
-for example an arithmetic expression:
-```1 + 1```
-
-Should produce the following tokens into a Vector:
-```[Token { _type: IntegerLiteral, _value: 1 }, Token { _type: Plus, _value: "+" }, Token { _type: IntegerLiteral, _value: 1 }]```
-
-These tokens can be further parsed into meaningful expressions
-Such as the following:
-```
-Program {
-    body: [
-        BinaryExpression {
-            left: 1,
-            operator: Operators::Plus,
-            right: 1,
-        }
-    ]
-}
-```
-here is an example snippet that can be used:
-```parser.rs
-
-struct Parser {};
-
-impl Parser {
-    // Parser's functions are displayed here.
-}
-```
-```ast.rs
-enum Operators {
-    Addition,
-    Subtraction,
-    Multiplication,
-    Division,
-    Modulus,
-    /* Other Operators */
-}
-enum Expr {
-    BinaryExpression { left: f64, op: Operators, right: f64 }
-    IdentifierLiteral { value: String }
-    IntegerLiteral { value: f64 }
-}
-struct Program {
-    body: Vec<Expr>;
-};
-```
+![image](./images/goal_parser.png)
