@@ -5,7 +5,7 @@ Amethyst
 
 Contents
 ========
-# <center><a>Lexer</a> |</center>
+# <a src="https://github.com/ismayeelanver/amethyst?tab=readme-ov-file#10-the-lexer">Lexer</a>
 
 1.0 The Lexer
 ==
