@@ -3,10 +3,12 @@ Amethyst
 ![image](icons/icon.svg)
 ===
 
+Contents
+========
+# <center><a>Lexer</a> |</center>
 
-(All the code might not work because it is not tested)
-====================================================
-- 1.0 The Lexer
+1.0 The Lexer
+==
 
 The Lexer is the part where it collects the input and makes them into tokens for example `1 + 2`, So here its gonna go throught the code ive given in this case `1 + 2` and for each character its gonna make a token for example the tokens might look like a struct:
 ```rust
@@ -260,7 +262,8 @@ this is a screenshot of it:
 
 there's a lot right!, dont worry we finished it.
 
-- 1.1 Parser
+1.1 Parser
+===
 
 Inspiration 💫
 
