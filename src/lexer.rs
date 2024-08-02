@@ -1,7 +1,7 @@
-use std::process::exit;
-
+use std::{fmt, process::exit};
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum TokenType {
+    Assingment,
     Return,
     LParen,
     RParen,
@@ -29,11 +29,24 @@ pub enum TokenType {
     Dot,
     Float,
 }
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct Token {
     pub _type: TokenType,
     pub value: String,
+}
+
+pub trait TokenTraits {
+    fn to_string(&self) -> String;
+    fn fmt(&self, f: fmt::Formatter<'_>) -> fmt::Result;
+}
+
+impl TokenTraits for Token {
+    fn fmt(&self, mut f: fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{} -> ({})", self._type, self.value)
+    }
+    fn to_string(&self) -> String {
+        format!("{}", self)
+    }
 }
 
 pub fn tokenize(content: String) -> Vec<Token> {
@@ -181,11 +194,20 @@ pub fn tokenize(content: String) -> Vec<Token> {
                 }
             }
             ':' => {
+                let start = i;
                 i += 1;
-                Token {
+                let mut tk: Token = Token {
                     _type: TokenType::Repr,
                     value: current_char.to_string(),
+                };
+                if vechar[i] == '=' {
+                    i += 1;
+                    tk = Token {
+                        _type: TokenType::Assingment,
+                        value: vechar[start..i].into_iter().collect(),
+                    };
                 }
+                tk
             }
             '%' => {
                 i += 1;
@@ -258,7 +280,7 @@ pub fn tokenize(content: String) -> Vec<Token> {
     }
     tokens.push(Token {
         _type: TokenType::EOF,
-        value: "EOF".to_string(),
+        value: '\0'.to_string(),
     });
 
     tokens
